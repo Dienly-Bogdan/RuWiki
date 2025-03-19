@@ -22,6 +22,11 @@ def get_article(name):
                            article_text=article_details["article_text"],
                            article_image=article_details["article_image"])
 
+@app.route("/create_artical")
+def get_index():
+    return render_template("created_article.html")
+
+
 @app.route("/")
 @app.route("/index")
 def get_index():
