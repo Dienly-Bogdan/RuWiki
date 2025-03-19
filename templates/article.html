@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>РуВики</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <div class="arcticle">
+        <div class="arcticle_text">
+            <h1>{{ article_title }}</h1>
+            <p>{{ article_text }}</p>
+        </div>
+        <div class="arcticle_image">
+            <img src="{{ url_for('static', filename=article_image)}}" alt="Enigma" style="height: 186px; width: auto; margin-bottom: 10px;">
+
+            <div>{{article_title}}</div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
