@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Создать статью</h1>
-    <form action="" class="create_article_form">
+    <form action="{{url_for('create_article') }}" method="POST" class="create_article_form" enctype="multipart/form-data">
         <div class="form_group">
             <label for="title">Название статьи</label>
             <input type="text" id="title" name="title" required>

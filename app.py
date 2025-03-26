@@ -1,6 +1,16 @@
-from flask import Flask, render_template
+from flask import (Flask, 
+                   render_template, 
+                   request,
+                   redirect,
+                   url_for,
+                   send_from_directory)
+import os
+import article
 
 app = Flask(__name__)
+# Создаем по умолчани. папку uploads для загрузки картинок 
+app.config['UPLOAD_FOLDER'] = "uploads/"
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 database = {
     "spacex": {"article_title": "SpaceX", "article_text": "SpaceX Crew-10 — планируемый десятый пилотируемый полёт американского космического корабля Crew Dragon компании SpaceX в рамках программы NASA Commercial Crew Program. Корабль доставит четырёх членов экипажа миссии Crew-10 и космических экспедиций МКС-72/73 на Международную космическую станцию (МКС). Запуск планируется провести 14 марта 2025 года[1].", "article_image": "spacex.jpg"},
@@ -16,20 +26,41 @@ def get_article(name):
     if name not in database:
         return "<h1>Такой статьи не существует</h1>"
 
-    article_details = database[name]
-    return render_template("article.html", 
-                           article_title=article_details["article_title"],
-                           article_text=article_details["article_text"],
-                           article_image=article_details["article_image"])
+    article = database[name]
+    return render_template("article.html", article=article)
 
-@app.route("/create_artical")
-def created_article():
-    return render_template("created_article.html")
+@app.route("/create_article", methods=["GET", "POST"])
+def create_article():
+    if request.method == "GET":
+        return render_template("created_article.html")
+    
+    # Далее пост запрос
+    title = request.form.get("title")
+    content = request.form.get("content")
+    photo = request.files.get("photo")
+    
+    print("Загрузка файла:", photo.filename)
+    print("Путь сохранения:", app.config["UPLOAD_FOLDER"] + photo.filename)
 
+
+    if photo is not None and photo.filename:
+        photo_path = photo.filename
+        photo.save(app.config["UPLOAD_FOLDER"] + photo_path)
+    else:
+        photo_path = None
+
+    database[title] = article.Article(title, content, photo_path)
+
+    return redirect(url_for("get_index"))
 
 @app.route("/")
 @app.route("/index")
 def get_index():
     return render_template("index.html")
+
+@app.route("/uploads/<filename>")
+def uploaded_photo(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
 
 app.run(debug=True, port=8080)
