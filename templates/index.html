@@ -9,24 +9,21 @@
 <body>
     <div class="arcticle_list">
         <h1>Доступные статьи</h1>
+        <div class="create_article">
+            Создать статью
+        </div>
         <div class="article_table">
-            <a class="article_card" href="{{url_for('get_article', title='spacex')}}">
-                <h3>SpaceX</h3>
-                <p>Что-то про статью кратко</p>
 
+            {% for article in articles %}
+            <a class="article_card" href="{{url_for('get_article', title=article.title)}}">
+                <h3>{{ article.title}}</h3>
+                {% if article.photo %}
+                <img src="{{ url_for('uploaded_photo', filename=article.photo)}}" alt="{{ article.title }}" style="height: 100px; width: auto; margin-bottom: 2px;">
+                {% else %}
+                <div><b>Фотография отсутствует</b></div>
+                {% endif %}
             </a>
-
-            <a class="article_card" href="{{url_for('get_article', title='enigma')}}">
-                <h3>Enigma</h3>
-                <p>Что-то про статью кратко</p>
-
-            </a>
-
-            <a class="article_card" href="{{url_for('get_article', title='redbull')}}">
-                <h3>Redbull</h3>
-                <p>Что-то про статью кратко</p>
-
-            </a>
+            {% endfor %}
         </div>
     </div>
 </body>

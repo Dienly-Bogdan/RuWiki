@@ -26,7 +26,7 @@ def get_article(title):
 @app.route("/create_article", methods=["GET", "POST"])
 def create_article():
     if request.method == "GET":
-        return render_template("created_article.html")
+        return render_template("created_article.html", error=request.args.get("error"))
     
     # Далее пост запрос
     title = request.form.get("title")
@@ -42,7 +42,7 @@ def create_article():
 
     saved = Database.save(Article(title, content, photo_path))
     if not saved:
-        return "<h1> Статья с таким именем уже есть! </h1>"
+        return redirect(url_for('create_article', error=True))
 
     return redirect(url_for("get_index"))
 
@@ -50,7 +50,7 @@ def create_article():
 @app.route("/")
 @app.route("/index")
 def get_index():
-    return render_template("index.html")
+    return render_template("index.html", articles=Database.get_all_articles())
 
 
 @app.route("/uploads/<filename>")
