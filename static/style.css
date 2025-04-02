@@ -124,7 +124,27 @@ body{
     background-color: white;
 }
 
-.create_article{
+.header {
+    height: 80px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 5px;
+    width: 1000px;
+    display: flex;
     justify-content: flex-end;
-    border: 1px red solid;
+    align-items: center;
+}
+
+.create_btn{
+    height: 30px;
+    width: auto;
+    background-color: rgb(194, 190, 190);
+    padding: 5px;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 10px;
+    color: black;
+    font-weight: 700;
 }
