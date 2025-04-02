@@ -5,7 +5,8 @@ from flask import (Flask,
                    url_for,
                    send_from_directory)
 import os
-from article import Database, Article
+from article import Article
+from database import Database
 
 app = Flask(__name__)
 # Создаем по умолчани. папку uploads для загрузки картинок 
