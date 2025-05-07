@@ -3,27 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>РуВики</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <title>Рувики</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="arcticle">
-        <div class="arcticle_text">
-            <h1>{{ article.title }}</h1>
-            <p>{{ article.content }}</p>
+    <div class="article_controls">
+        <div class="left_controls">
+            <a href="{{ url_for('index') }}">Главная страница</a>
         </div>
-        <div class="arcticle_image">
-            {% if article.photo %}
 
-                <img src="{{ url_for('uploaded_photo', filename=article.photo)}}" alt="{{ article.title }}" style="height: 186px; width: auto; margin-bottom: 10px;">
-
-                <div>{{article.title}}</div>
-            {% else %}
-                <div><b>Фотография отсутствует</b></div>
-            {% endif %}
+        <div class="right_controls">
+            <form action="{{ url_for('update_article', id=article.id) }}" method="get">
+                <button type="submit" class="controls_edit_btn">
+                    Отредактировать
+                </button>
+            </form>
+    
+            <form action="{{ url_for('delete_article', id=article.id) }}" method="post">
+                <button
+                        type="submit"
+                        class="controls_del_btn"
+                        id="delete_article_btn"
+                        onclick="return confirm('Вы уверены, что хотите удалить статью?')" >
+                    Удалить
+                    <img
+                        src="{{ url_for('static', filename='img/delete-button.svg') }}"
+                        class="controls_del_btn_icon">
+                </button>
+            </form>
         </div>
     </div>
 
-    
+    <div class="article">
+        <div class="article_text">
+            <h1>{{ article.title }}</h1>
+
+            <p>
+                {{ article.content }}
+            </p>
+        </div>
+
+        <div class="article_image">
+            {% if article.image %}
+                <img
+                    src="{{ url_for('uploaded_photo', filename=article.image) }}"
+                    alt="{{ article.title }}"
+                    style="height: 150px; width: auto; margin-bottom: 10px;">
+
+                <div><b>{{ article.title }}</b></div>
+            {% else %}
+                <div><b>Изображение отсутсвует</b></div>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>
