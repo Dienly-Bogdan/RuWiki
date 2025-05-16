@@ -5,19 +5,54 @@ from flask import (
     redirect,
     url_for,
     send_from_directory,
-    abort)
+    abort,
+    flash)
 import os
 from article import Article
 from database import Database
 
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "dekou"
 Database.create_article_table()
 
 # Создаем по умолчанию папку 'uploads/' для загрузки картинок
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "GET":
+        return render_template('register.html', error=request.args.get("error"))
+    
+
+    user_name = request.form.get("user_name")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    password_reapt = request.form.get("password_reapt")
+
+    if not user_name:
+        flash("Имя пользователя не может быть пустым!")
+        return redirect(request.url)
+
+    if not email:
+        flash("Email не может быть пустым!")
+        return redirect(request.url)
+
+    if not password:
+        flash("Password не может быть пустым!")
+        return redirect(request.url)
+
+    if not password_reapt:
+        flash("Password не может быть пустым!")
+        return redirect(request.url)
+
+    if password != password_reapt:
+        flash("Пароли не совпадают!")
+        return redirect(request.url)
+    
+    return redirect(url_for('index'))
 
 @app.route("/favicon.ico")
 def favicon():
