@@ -14,7 +14,7 @@ from database import Database
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "dekou"
-Database.create_article_table()
+Database.create_tables()
 
 # Создаем по умолчанию папку 'uploads/' для загрузки картинок
 app.config['UPLOAD_FOLDER'] = 'uploads/'
@@ -50,6 +50,11 @@ def register():
 
     if password != password_reapt:
         flash("Пароли не совпадают!")
+        return redirect(request.url)
+    
+    saved = Database.register_user(user_name, email, password)
+    if not saved:
+        flash("Пользователем с таким user_name или почтой есть!!")
         return redirect(request.url)
     
     return redirect(url_for('index'))

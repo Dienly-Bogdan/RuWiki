@@ -192,7 +192,7 @@ body {
     min-width: 320px;
 }
 
-.create_btn {
+.header_btn {
     height: 30px;
     width: auto;
     background-color: gold;
@@ -200,6 +200,8 @@ body {
     text-decoration: none;
     font-size: 20px;
     border-radius: 5px;
+    margin-right: 8px;
+    text-align: center;
 }
 
 .image_preview {
@@ -207,4 +209,19 @@ body {
     height: 150px;
     width: auto;
     margin-bottom: 10px;
+}
+
+@media (max-width: 768px){
+    .header{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    
+    .header_btn{
+        margin-bottom: 8px;
+    }
 }
