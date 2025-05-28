@@ -10,6 +10,9 @@
 <body>
     <div class="main">
         <div class="header">
+            <div class="user_counts">
+                Зарегистрированно: {{user_count}}
+            </div>
             <a
                 class="header_btn"
                 href="{{ url_for('create_article') }}"

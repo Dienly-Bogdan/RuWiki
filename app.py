@@ -59,6 +59,19 @@ def register():
     
     return redirect(url_for('index'))
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template('login.html', error=request.args.get("error"))
+    user_name = request.form.get("user_name")
+    password = request.form.get("password")
+
+    if not Database.can_be_logged_in(user_name,password):
+        flash("Такой пользователь не существует или нет такого пользователя")
+        return redirect(request.url)
+    
+    return redirect(url_for('index'))
+
 @app.route("/favicon.ico")
 def favicon():
     return send_from_directory(
@@ -160,7 +173,7 @@ def index():
     for i in range(0, len(articles), count_in_group): # 0, 4, 8, 12, ...
         groups.append(articles[i:i+count_in_group]) # [0:4], [4:8], [8:12], ...
 
-    return render_template("index.html", groups=groups)
+    return render_template("index.html", groups=groups, user_count=Database.count_users())
 
 
 @app.route('/uploads/<filename>')

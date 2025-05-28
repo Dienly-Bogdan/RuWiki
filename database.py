@@ -10,14 +10,13 @@ class Database:
     @staticmethod
     def execute(sql_code: str, params: tuple = ()):
         conn = sqlite3.connect(Database.db_path)
-        
         cursor = conn.cursor()
-        conn = sqlite3.connect(Database.db_path)
-
-        cursor = conn.executescript(sql_code)
-
+        if params:
+            cursor.execute(sql_code, params)  # Используем execute для параметров
+        else:
+            cursor.executescript(sql_code)    # executescript для DDL-запросов
         conn.commit()
-
+        conn.close()
 
     @staticmethod
     def create_tables():
@@ -116,6 +115,8 @@ class Database:
         
         users = Database.fetchall("SELECT * FROM users WHERE user_name = ? OR email = ?", [user_name, email])
         
+        print(users)
+
         if users:
             return False
         
@@ -125,4 +126,27 @@ class Database:
                           "VALUES(?, ?, ?)",
                         [user_name, email, password_hash])
         
+        return True
+
+    
+    @staticmethod
+    def count_users():
+        # т.к fetchall возвращает список с кортежом
+        count = Database.fetchall("SELECT COUNT(*) FROM users")[0][0]
+        return count
+        
+    @staticmethod
+    def can_be_logged_in(user_or_email: str, password: str):
+        users = Database.fetchall("SELECT * FROM users WHERE user_name = ? OR email = ? ", [user_or_email, password])
+
+        if not users:
+            return False
+        
+        user = users[0]
+        real_password_hash = user[3]
+
+        password_hash = hashlib.md5( password.encode() ).hexdigest()
+
+        if real_password_hash != password_hash:
+            return False
         return True
