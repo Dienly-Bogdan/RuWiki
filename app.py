@@ -6,7 +6,8 @@ from flask import (
     url_for,
     send_from_directory,
     abort,
-    flash)
+    flash,
+    session)
 import os
 from article import Article
 from database import Database
@@ -57,7 +58,7 @@ def register():
         flash("Пользователем с таким user_name или почтой есть!!")
         return redirect(request.url)
     
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -70,7 +71,14 @@ def login():
         flash("Такой пользователь не существует или нет такого пользователя")
         return redirect(request.url)
     
+    session['user_id'] = Database.find_user_id_by_name_or_email(user_name)
     return redirect(url_for('index'))
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    if 'user_id' in session:
+        session.clear()
+    return redirect(url_for("index"))
 
 @app.route("/favicon.ico")
 def favicon():
@@ -111,8 +119,9 @@ def create_article():
     else:
         image_path = None
 
+    auhtor = Database.find_user_by_id(session['user_id'])
     saved = Database.save(
-        Article(title, content, image_path)
+        Article(title, content, image_path, auhtor=auhtor)
     )
     if not saved:
         return redirect(url_for('create_article', error=True))

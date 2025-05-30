@@ -1,6 +1,6 @@
 import sqlite3
 import hashlib
-from article import Article
+from article import Article, User
 
 
 class Database:
@@ -52,14 +52,25 @@ class Database:
         return True
 
     @staticmethod
+    def find_user_by_id(user_id: int) -> User | None:
+        users = Database.fetchall('SELECT * FROM users WHERE id = ?', [user_id])
+
+        if not users:
+            return None
+        
+        id, user_name, email, password_hash = users[0]
+        return User(name=user_name, email=email)
+
+    @staticmethod
     def find_article_by_id(article_id: int) -> Article | None:
         articles = Database.fetchall("SELECT * FROM articles WHERE id = ?", [article_id])
 
         if not articles: # if len(articles) == 0
             return None
 
-        id, title, content, image = articles[0]
-        article = Article(id=id, title=title, content=content, image=image)
+        id, title, content, image, author_id = articles[0]
+        author = Database.find_user_by_id(author_id)
+        article = Article(id=id, title=title, content=content, image=image, author=author)
 
         return article
 
@@ -68,9 +79,10 @@ class Database:
         if Database.find_article_by_title(article.title) is not None:
             return False
 
+        author_id = Database.find_user_id_by_name_or_email(article.author_email)
         Database.execute(f"""
-        INSERT INTO articles (title, content, filename) VALUES (?, ?, ?)
-        """, (article.title, article.content, article.image))
+        INSERT INTO articles (title, content, filename, author_id) VALUES (?, ?, ?, ?)
+        """, (article.title, article.content, article.image, author_id))
         return True
 
     @staticmethod
@@ -86,14 +98,16 @@ class Database:
     def get_all_articles():
         articles = []
 
-        for (id, title, content, image) in Database.fetchall(
+        for (id, title, content, image, author_id) in Database.fetchall(
                 "SELECT * FROM articles"):
+            author = Database.find_user_by_id(author_id)
             articles.append(
                 Article(
                     title=title,
                     content=content,
                     image=image,
-                    id=id
+                    id=id,
+                    author=author,
                 )
             )
 
@@ -107,8 +121,9 @@ class Database:
         if not articles:
             return None
         
-        id, title, content, image = articles[0]
-        return Article(title, content, image, id)
+        id, title, content, image, author_id = articles[0]
+        auhtor = Database.find_user_by_id(author_id)
+        return Article(title, content, image, id, auhtor = author_id)
     
     @staticmethod
     def register_user(user_name, email, password):
@@ -121,7 +136,7 @@ class Database:
             return False
         
         password_hash = hashlib.md5(password.encode()).hexdigest()
-        print(f"ВНУТРИ ФУНКЦИИ РЕГИСТР ПЕЧАТАЕТСЯ:, {user_name}, {email}, {password}")
+        
         Database.execute("INSERT INTO users (user_name, email, password_hash) "
                           "VALUES(?, ?, ?)",
                         [user_name, email, password_hash])
@@ -150,3 +165,13 @@ class Database:
         if real_password_hash != password_hash:
             return False
         return True
+    
+    @staticmethod
+    def find_user_id_by_name_or_email(username_on_email):
+        users = Database.fetchall("SELECT id FROM users WHERE user_name = ? OR email = ? ", [username_on_email, username_on_email])
+
+        if not users:
+            return None
+        
+        id = users[0][0]
+        return id 

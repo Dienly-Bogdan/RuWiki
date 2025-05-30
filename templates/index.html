@@ -13,15 +13,30 @@
             <div class="user_counts">
                 Зарегистрированно: {{user_count}}
             </div>
+            {% if session['user_id'] %}
             <a
                 class="header_btn"
                 href="{{ url_for('create_article') }}"
             >Создать статью</a>
 
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button class="header_btn">
+                    Выйти
+                </button>
+            </form>
+
+            {% else %}
+
+            <a href="{{ url_for('login') }}" class="header_btn">
+                Войти
+            </a>
+
             <a
                 class="header_btn"
                 href="{{ url_for('register') }}"
             >Зарегестрироваться</a>
+
+            {% endif %}
         </div>
 
         <div class="article_list">
