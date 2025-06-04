@@ -24,7 +24,11 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 @app.route("/statistic")
 def statistic():
     user_count = Database.count_users()
-    return render_template("statistics.html", user_count=user_count)
+    user_name = Database.get_user_names()
+    for name in user_name:
+        article_count = Database.get_articles_count_of_user(name)
+        print(f"Пользователь {name} создал {article_count} статей")
+    return render_template("statistics.html", user_count=user_count, user_name=user_name)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

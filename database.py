@@ -175,3 +175,16 @@ class Database:
         
         id = users[0][0]
         return id 
+    
+    @staticmethod
+    def get_articles_count_of_user(user_name: str) -> int:
+        user_id = Database.find_user_id_by_name_or_email(user_name)
+        if user_id is None:
+            return 0
+        articles = Database.fetchall("SELECT COUNT(*) FROM articles WHERE author_id = ?", [user_id])
+        return articles[0][0] if articles else 0
+    
+    @staticmethod
+    def get_user_names():
+        users = Database.fetchall("SELECT user_name FROM users")
+        return [user[0] for user in users] if users else []
