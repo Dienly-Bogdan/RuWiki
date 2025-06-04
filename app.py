@@ -21,6 +21,10 @@ Database.create_tables()
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+@app.route("/statistic")
+def statistic():
+    user_count = Database.count_users()
+    return render_template("statistics.html", user_count=user_count)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
