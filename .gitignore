@@ -1,1 +1,31 @@
+# Python cache
 __pycache__/
+*.pyc
+
+# Виртуальные окружения
+venv/
+env/
+
+# Файлы IDE и редакторов
+.idea/
+.vscode/
+*.swp
+
+# Логи
+*.log
+
+# Загрузки и чувствительные файлы
+uploads/
+*.sqlite3
+*.db
+
+# ОС специфические файлы
+.DS_Store
+Thumbs.db
+
+# Лишние/устаревшие шаблоны
+adaptive_article.html
+created_article.html
+
+# Лишние/тестовые CSS
+adaptive_article.css
