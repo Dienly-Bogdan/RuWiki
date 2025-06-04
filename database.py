@@ -79,7 +79,7 @@ class Database:
         if Database.find_article_by_title(article.title) is not None:
             return False
 
-        author_id = Database.find_user_id_by_name_or_email(article.author_email)
+        author_id = Database.find_user_id_by_name_or_email(article.author.name)
         Database.execute(f"""
         INSERT INTO articles (title, content, filename, author_id) VALUES (?, ?, ?, ?)
         """, (article.title, article.content, article.image, author_id))
@@ -123,7 +123,7 @@ class Database:
         
         id, title, content, image, author_id = articles[0]
         auhtor = Database.find_user_by_id(author_id)
-        return Article(title, content, image, id, auhtor = author_id)
+        return Article(title=title, content=content, image=image, id=id, author = author_id)
     
     @staticmethod
     def register_user(user_name, email, password):

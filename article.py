@@ -7,8 +7,7 @@ class User:
 
 @dataclass
 class Article:
-    author_name: str
-    author_email: str
+    author: User
     title: str
     content: str
     image: str | None = None

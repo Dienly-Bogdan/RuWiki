@@ -119,9 +119,9 @@ def create_article():
     else:
         image_path = None
 
-    auhtor = Database.find_user_by_id(session['user_id'])
+    author = Database.find_user_by_id(session['user_id'])
     saved = Database.save(
-        Article(title, content, image_path, auhtor=auhtor)
+        Article(title=title, content=content, image=image_path, author=author)
     )
     if not saved:
         return redirect(url_for('create_article', error=True))
