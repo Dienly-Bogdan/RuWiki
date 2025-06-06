@@ -188,3 +188,17 @@ class Database:
     def get_user_names():
         users = Database.fetchall("SELECT user_name FROM users")
         return [user[0] for user in users] if users else []
+    
+    @staticmethod
+    def find_articles(word: str):
+        articles = Database.fetchall(
+            "SELECT * FROM articles WHERE title LIKE ? OR content LIKE ?",
+            ('%' + word + '%', '%' + word + '%')
+        )
+        
+        result = []
+        for (id, title, content, image, author_id) in articles:
+            author = Database.find_user_by_id(author_id)
+            result.append(Article(id=id, title=title, content=content, image=image, author=author))
+        
+        return result

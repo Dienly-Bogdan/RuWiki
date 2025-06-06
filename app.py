@@ -183,6 +183,15 @@ def update_article(id):
 @app.route("/")
 @app.route("/index")
 def index():
+    article_title = request.args.get("article_title")
+
+    if article_title:
+        article = Database.find_article(article_title)
+        if article is None:
+            return "<h1>Такой статьи не существует!</h1>"
+        return render_template("article.html", article=article)
+
+    
     articles = Database.get_all_articles()
 
     count_in_group = 4
