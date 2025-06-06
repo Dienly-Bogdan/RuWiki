@@ -42,21 +42,11 @@
         <div class="article_list">
             <h1>Доступные статьи</h1>
 
-            <form action="" method="get">
+            <form action="{{ url_for('index')}}" method="get">
                 <div class="form_group">
-                    <input type="text" id="article_title" name="article_title" required placeholder="Введите название статьи">
+                    <input type="text" id="find_article" name="find_article" required placeholder="Введите название статьи">
                     <button type="submit">Найти</button>
                 </div>
-                <div>
-                    <label for="">Выберите тему:</label>
-                    <select id="model_article" name="model_article">
-                        <option value="cosmos">Космос</option>
-                        <option value="Fisic">Физика</option>
-                        <option value="Puteshestvie">Путешествия</option>
-                        <option value="Nauka">Наука</option>
-                    </select>
-                </div>
-
             </form>
         
             <div class="article_table">

@@ -191,8 +191,9 @@ class Database:
     
     @staticmethod
     def find_articles(word: str):
+        word = word.upper()
         articles = Database.fetchall(
-            "SELECT * FROM articles WHERE title LIKE ? OR content LIKE ?",
+            "SELECT * FROM articles WHERE UPPER(title) LIKE ? OR UPPER(content) LIKE ?",
             ('%' + word + '%', '%' + word + '%')
         )
         
